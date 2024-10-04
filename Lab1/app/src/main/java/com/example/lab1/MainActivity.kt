@@ -13,6 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
@@ -26,6 +29,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import androidx.compose.material3.TextField
 
 
 class MainActivity : ComponentActivity() {
@@ -33,16 +47,70 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            Lab1Theme() {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+            Lab1Theme {
+                MainScreen()
             }
         }
     }
 }
+
+@Composable
+fun MainScreen() {
+    val navController = rememberNavController()
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        bottomBar = { BottomNavigationBar(navController) }
+    ) { innerPadding ->
+        Column(Modifier.padding(innerPadding)) {
+            NavHost(
+                navController = navController,
+                startDestination = "greetingScreen",
+                modifier = Modifier.weight(1f)
+            ) {
+                composable("greetingScreen") { Greeting() }
+                composable("listScreen") { ListScreen() }
+            }
+        }
+    }
+}
+
+@Composable
+fun BottomNavigationBar(navController: NavController) {
+    NavigationBar {
+        val backStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = backStackEntry?.destination?.route
+
+        NavBarItems.BarItems.forEach { navItem ->
+            NavigationBarItem(
+                selected = currentRoute == navItem.route,
+                onClick = {
+                    navController.navigate(navItem.route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                icon = {
+                    Icon(imageVector = navItem.image, contentDescription = navItem.title)
+                },
+                label = { Text(text = navItem.title) }
+            )
+        }
+    }
+}
+
+object NavBarItems {
+    val BarItems = listOf(
+        BarItem(title = "Home", Icons.Filled.Home, route = "greetingScreen"),
+        BarItem(title = "List", Icons.Filled.Menu, route = "listScreen")
+    )
+}
+
+data class BarItem(val title: String, val image: ImageVector, val route: String)
+
 @Composable
 fun Greeting(modifier: Modifier = Modifier) {
     Column (modifier = modifier
@@ -75,6 +143,20 @@ fun Greeting(modifier: Modifier = Modifier) {
                 Text(text = "X")
             }
         }
+    }
+}
+
+@Composable
+fun ListScreen() {
+    val text = "Любое текстовое поле :)"
+
+    Column(Modifier.padding(16.dp)) {
+        Text(text = "Текстовое поле:", fontSize = 18.sp)
+        Text(
+            text = text,
+            fontSize = 16.sp,
+            modifier = Modifier.padding(top = 8.dp)
+        )
     }
 }
 @Preview(showBackground = true)
