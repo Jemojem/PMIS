@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string-array name="Genres">
+        <item>Shooter</item>
+        <item>Puzzle</item>
+        <item>Adventure</item>
+        <item>Horror</item>
+        <item>Roguelike</item>
+        <item>Action</item>
+        <item>RPG</item>
+        <item>Soulslike</item>
+        <item>JRPG</item>
+    </string-array>
+    <string-array name="Shooter">
+        <item>Doom|mood.jpg</item>
+        <item>S.T.A.L.K.E.R heart of Chernobyl|stalker.jpg</item>
+        <item>Battlefield 1|battlefield1.jpeg</item>
+    </string-array>
+    <string-array name="Puzzle">
+        <item>Portal 2|portal.jpg</item>
+        <item>BABA is YOU|baba.png</item>
+        <item>The witness|witness.jpeg</item>
+    </string-array>
+    <string-array name="Adventure">
+        <item>Ghost of Tsushima|ghost.webp</item>
+        <item>Stray|stray.jpg</item>
+        <item>Spider-man|spiders.jpg</item>
+    </string-array>
+    <string-array name="Horror">
+        <item>Darkwood|darkwood.webp</item>
+        <item>Outlast|outlast.webp</item>
+        <item>Silent Hill 2|silent.jpeg</item>
+    </string-array>
+    <string-array name="Roguelike">
+        <item>The binding of isaac|isaac.jpg</item>
+        <item>Hades|hades.jpg</item>
+        <item>Slay the spire|slay.webp</item>
+    </string-array>
+    <string-array name="Action">
+        <item>Ultrakill|ultrakill.jpg</item>
+        <item>Metal gear rising|metal.jpg</item>
+        <item>Prototype|prototype.webp</item>
+    </string-array><string-array name="RPG">
+        <item>Disco Elysium|disco.jpg</item>
+        <item>Baldurs Gate 3|baldurs.png</item>
+        <item>Undertale|undertale.png</item></string-array>
+    <string-array name="SoulsLike">
+        <item>Elden ring|elden.png</item>
+        <item>Lies of P|lies.jpeg</item>
+        <item>Remnant II|remnant.jpg</item>
+    </string-array><string-array name="Survival">
+        <item>Dead by daylight|dbd.webp</item>
+        <item>Dont starve together|dts.jpeg</item>
+        <item>Barotrauma|barotrauma.jpg</item>
+</string-array>
+    <string-array name="JRPG">
+        <item>Metaphor: ReFantazio|metaphor.jpeg</item>
+        <item>The Legend of Heroes: Trails in the Sky|trails.jpg</item>
+        <item>Yakuza Like a Dragon: Infinite Wealth|yakuza.jpg</item>
+    </string-array>
+</resources>
