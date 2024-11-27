@@ -9,7 +9,7 @@
         <item>Roguelike</item>
         <item>Action</item>
         <item>RPG</item>
-        <item>Soulslike</item>
+        <item>SoulsLike</item>
         <item>JRPG</item>
     </string-array>
     <string-array name="Shooter">
@@ -25,11 +25,11 @@
     <string-array name="Adventure">
         <item>Ghost of Tsushima|ghost.webp</item>
         <item>Stray|stray.jpg</item>
-        <item>Spider-man|spiders.jpg</item>
+        <item>Spider-man|spider.jpg</item>
     </string-array>
     <string-array name="Horror">
         <item>Darkwood|darkwood.webp</item>
-        <item>Outlast|outlast.webp</item>
+        <item>Outlast|outlast.png</item>
         <item>Silent Hill 2|silent.jpeg</item>
     </string-array>
     <string-array name="Roguelike">

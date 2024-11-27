@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             _56LabTheme {
-                val topBarTitle = remember { mutableStateOf("Лучшие игры") }
+                val topBarTitle = remember { mutableStateOf("") }
                 val drawerState = rememberDrawerState(DrawerValue.Closed)
                 val scope = rememberCoroutineScope()
                 val mainList= remember{ mutableStateOf( getListItemsByIndex(0,this))

@@ -88,7 +88,6 @@ fun Body(onEvent: (DrawerEvents) -> Unit) {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(3.dp),
-
                 colors = CardDefaults.cardColors(containerColor = BgTransp)
             ) {
                 Text(
