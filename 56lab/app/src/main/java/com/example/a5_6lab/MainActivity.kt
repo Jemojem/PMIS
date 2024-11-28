@@ -1,41 +1,51 @@
 package com.example.a5_6lab
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.a5_6lab.ui.theme._56LabTheme
-import com.example.a5_6lab.ui_components.DrawerMenu
-import com.example.a5_6lab.ui_components.MainListItem
+import com.example.a5_6lab.ui_components.InfoScreen
 import com.example.a5_6lab.ui_components.MainScreen
-import com.example.a5_6lab.ui_components.MainTopBar
-import com.example.a5_6lab.utils.DrawerEvents
-import com.example.a5_6lab.utils.IdArrayList
+import com.example.a5_6lab.utils.ItemSaver
 import com.example.a5_6lab.utils.ListItem
-import kotlinx.coroutines.launch
+import com.example.a5_6lab.utils.Routes
 
 
 class MainActivity : ComponentActivity() {
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            var item = rememberSaveable(stateSaver = ItemSaver) {
+
+                mutableStateOf(ListItem("", "",""))}
+            val navController = rememberNavController()
             _56LabTheme {
-                MainScreen(context = this)
+                NavHost(
+                    navController = navController,
+
+                    startDestination = Routes.MAIN_SCREEN.route
+
+                ) {
+                    composable(Routes.MAIN_SCREEN.route) {
+                        MainScreen(context = this@MainActivity) { listItem ->
+
+                            item.value = ListItem(listItem.title,listItem.imageName,listItem.htmlName)
+
+                            navController.navigate(Routes.INFO_SCREEN.route)
+
+                        }
+                    }
+
+                    composable(Routes.INFO_SCREEN.route) {
+                        InfoScreen(item = item.value!!)
+
+                    }
+                }
             }
         }
     }

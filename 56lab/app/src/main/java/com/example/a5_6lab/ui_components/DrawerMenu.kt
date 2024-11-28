@@ -1,4 +1,5 @@
 package com.example.a5_6lab.ui_components
+import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -31,10 +32,19 @@ import com.example.a5_6lab.R
 import com.example.a5_6lab.ui.theme.BgTransp
 import com.example.a5_6lab.ui.theme.MyBlue
 import com.example.a5_6lab.utils.DrawerEvents
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalConfiguration
 
 
 @Composable
 fun DrawerMenu(onEvent: (DrawerEvents) -> Unit) {
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.steamback),
@@ -43,30 +53,35 @@ fun DrawerMenu(onEvent: (DrawerEvents) -> Unit) {
             contentScale = ContentScale.Crop
         )
         Column(modifier = Modifier.fillMaxSize()) {
-            Header()
-            Body() {event->onEvent(event)}
+            Header(isLandscape)
+            Body(isLandscape) { event -> onEvent(event) }
         }
     }
 }
 
 @Composable
-fun Header() {
-    Card(modifier = Modifier
-        .fillMaxWidth()
-        .height(170.dp)
-        .padding(5.dp),
+fun Header(isLandscape: Boolean) {
+    val headerHeight = if (isLandscape) 130.dp else 170.dp
+    Card(
+        modifier = Modifier
+            .fillMaxWidth() // Всегда заполняет всю ширину
+            .height(headerHeight)
+            .padding(5.dp),
         shape = RoundedCornerShape(10.dp),
         border = BorderStroke(1.dp, MyBlue)
     ) {
-        Box(modifier = Modifier.fillMaxSize(),
+        Box(
+            modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
-            Image(painter = painterResource(id = R.drawable.steamheader),
+            Image(
+                painter = painterResource(id = R.drawable.steamheader),
                 contentDescription = "Header Image",
-                modifier=Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
-            Text(text="Величайшие игры доступные в Steam",
+            Text(
+                text = "Величайшие игры доступные в Steam",
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MyBlue)
@@ -74,34 +89,75 @@ fun Header() {
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
-                color= Color.White
+                color = Color.White
             )
         }
     }
 }
+
 @Composable
-fun Body(onEvent: (DrawerEvents) -> Unit) {
+fun Body(isLandscape: Boolean, onEvent: (DrawerEvents) -> Unit) {
     val list = stringArrayResource(id = R.array.Genres)
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        itemsIndexed(list) { index, title ->
-            Card(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(3.dp),
-                colors = CardDefaults.cardColors(containerColor = BgTransp)
-            ) {
-                Text(
-                    text = title,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clickable { onEvent(DrawerEvents.OnItemClick(title,index)) }
-                        .padding(10.dp)
-                        .wrapContentWidth(),
-                    fontWeight = FontWeight.Bold,
-                    fontSize=16.sp,
-                    color = Color.White
-                )
+
+    if (isLandscape) {
+        // Альбомная ориентация: горизонтальный список, занимающий часть высоты
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.7f) // Панель занимает 70% высоты экрана
+                .padding(8.dp), // Отступы
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            contentPadding = PaddingValues(horizontal = 8.dp)
+        ) {
+            itemsIndexed(list) { index, title ->
+                GenreCard(title, index, onEvent, isLandscape = true)
+            }
+        }
+    } else {
+        // Портретная ориентация: вертикальный список, занимающий часть ширины
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxHeight()
+                .fillMaxWidth(0.7f) // Панель занимает 70% ширины экрана
+                .padding(8.dp), // Отступы
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            contentPadding = PaddingValues(vertical = 8.dp)
+        ) {
+            itemsIndexed(list) { index, title ->
+                GenreCard(title, index, onEvent, isLandscape = false)
             }
         }
     }
 }
+
+
+@Composable
+fun GenreCard(title: String, index: Int, onEvent: (DrawerEvents) -> Unit, isLandscape: Boolean) {
+    val modifier = if (isLandscape) {
+        Modifier
+            .wrapContentWidth() // Компактная ширина для альбомной ориентации
+            .padding(3.dp)
+    } else {
+        Modifier
+            .fillMaxWidth() // Полная ширина для портретной ориентации
+            .padding(3.dp)
+    }
+
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(containerColor = BgTransp)
+    ) {
+        Text(
+            text = title,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onEvent(DrawerEvents.OnItemClick(title, index)) }
+                .padding(10.dp),
+            textAlign = if (isLandscape) TextAlign.Start else TextAlign.Center, // Выравниваем текст
+            fontWeight = FontWeight.Bold,
+            fontSize = 16.sp,
+            color = Color.White
+        )
+    }
+}
+
