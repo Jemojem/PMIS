@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,15 +37,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material.icons.materialIcon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalConfiguration
+import com.example.a5_6lab.ui.theme.BgTranp1
 
 
 @Composable
 fun DrawerMenu(onEvent: (DrawerEvents) -> Unit) {
-    val configuration = LocalConfiguration.current
-    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.steamback),
@@ -53,22 +54,27 @@ fun DrawerMenu(onEvent: (DrawerEvents) -> Unit) {
             contentScale = ContentScale.Crop
         )
         Column(modifier = Modifier.fillMaxSize()) {
-            Header(isLandscape)
-            Body(isLandscape) { event -> onEvent(event) }
+            Header()
+            Body() {event->onEvent(event)}
         }
     }
 }
 
 @Composable
-fun Header(isLandscape: Boolean) {
-    val headerHeight = if (isLandscape) 130.dp else 170.dp
+fun Header() {
+    val isDarkTheme = isSystemInDarkTheme() // Проверка, используется ли тёмная тема
+
+    // Выбор цвета для границы и фона карточки
+    val borderColor = if (isDarkTheme) MyBlue else BgTranp1
+    val textColor = if (isDarkTheme) Color.White else Color.Black
+
     Card(
         modifier = Modifier
-            .fillMaxWidth() // Всегда заполняет всю ширину
-            .height(headerHeight)
+            .fillMaxWidth()
+            .height(170.dp)
             .padding(5.dp),
         shape = RoundedCornerShape(10.dp),
-        border = BorderStroke(1.dp, MyBlue)
+        border = BorderStroke(1.dp, borderColor) // Применяем цвет границы
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -84,80 +90,46 @@ fun Header(isLandscape: Boolean) {
                 text = "Величайшие игры доступные в Steam",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MyBlue)
+                    .background(borderColor) // Применяем цвет фона для текста
                     .padding(10.dp),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
-                color = Color.White
+                color = textColor // Применяем цвет текста
             )
         }
     }
 }
 
+
 @Composable
-fun Body(isLandscape: Boolean, onEvent: (DrawerEvents) -> Unit) {
+fun Body(onEvent: (DrawerEvents) -> Unit) {
     val list = stringArrayResource(id = R.array.Genres)
+    val isDarkTheme = isSystemInDarkTheme()
+    val cardColor = if (isDarkTheme) MyBlue else BgTranp1
+    val textColor = if (isDarkTheme) Color.White else Color.Black
 
-    if (isLandscape) {
-        // Альбомная ориентация: горизонтальный список, занимающий часть высоты
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.7f) // Панель занимает 70% высоты экрана
-                .padding(8.dp), // Отступы
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            contentPadding = PaddingValues(horizontal = 8.dp)
-        ) {
-            itemsIndexed(list) { index, title ->
-                GenreCard(title, index, onEvent, isLandscape = true)
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        itemsIndexed(list) { index, title ->
+            Card(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(3.dp),
+                colors = CardDefaults.cardColors(containerColor = cardColor)
+            ) {
+                Text(
+                    text = title,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clickable { onEvent(DrawerEvents.OnItemClick(title, index)) }
+                        .padding(10.dp)
+                        .wrapContentWidth(),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    color = textColor
+                )
             }
         }
-    } else {
-        // Портретная ориентация: вертикальный список, занимающий часть ширины
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth(0.7f) // Панель занимает 70% ширины экрана
-                .padding(8.dp), // Отступы
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            contentPadding = PaddingValues(vertical = 8.dp)
-        ) {
-            itemsIndexed(list) { index, title ->
-                GenreCard(title, index, onEvent, isLandscape = false)
-            }
-        }
-    }
-}
-
-
-@Composable
-fun GenreCard(title: String, index: Int, onEvent: (DrawerEvents) -> Unit, isLandscape: Boolean) {
-    val modifier = if (isLandscape) {
-        Modifier
-            .wrapContentWidth() // Компактная ширина для альбомной ориентации
-            .padding(3.dp)
-    } else {
-        Modifier
-            .fillMaxWidth() // Полная ширина для портретной ориентации
-            .padding(3.dp)
-    }
-
-    Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = BgTransp)
-    ) {
-        Text(
-            text = title,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onEvent(DrawerEvents.OnItemClick(title, index)) }
-                .padding(10.dp),
-            textAlign = if (isLandscape) TextAlign.Start else TextAlign.Center, // Выравниваем текст
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp,
-            color = Color.White
-        )
     }
 }
 

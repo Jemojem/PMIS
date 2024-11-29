@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,37 +24,47 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.a5_6lab.ui.theme.BgTranp1
 import com.example.a5_6lab.ui.theme.MyBlue
 import com.example.a5_6lab.utils.ListItem
 
 @Composable
-fun MainListItem(item: ListItem,onClick: (ListItem)->Unit ) {
-    Card(modifier = Modifier
-        .fillMaxWidth()
-        .height(300.dp)
-        .padding(5.dp)
-        .clickable {
-            onClick(item)
-        },
+fun MainListItem(item: ListItem, onClick: (ListItem) -> Unit) {
+    val isDarkTheme = isSystemInDarkTheme() // Проверка, используется ли тёмная тема
+
+    // Выбор цветов в зависимости от темы
+    val borderColor = if (isDarkTheme) MyBlue else BgTranp1
+    val textColor = if (isDarkTheme) Color.White else Color.Black
+    val backgroundColor = if (isDarkTheme) MyBlue else BgTranp1 // Цвет фона текста
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp)
+            .padding(5.dp)
+            .clickable { onClick(item) },
         shape = RoundedCornerShape(10.dp),
-        border = BorderStroke(1.dp, MyBlue)
+        border = BorderStroke(1.dp, borderColor) // Применяем цвет границы
     ) {
-        Box(modifier = Modifier.fillMaxSize(),
+        Box(
+            modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
-            AssetImage(imageName =item.imageName,
+            AssetImage(
+                imageName = item.imageName,
                 contentDescription = item.title,
                 modifier = Modifier.fillMaxSize()
             )
-            Text(text=item.title,
+            Text(
+                text = item.title,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MyBlue)
+                    .background(backgroundColor) // Применяем цвет фона для текста
                     .padding(10.dp),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
-                color= Color.White
+                color = textColor // Применяем цвет текста
             )
         }
     }
