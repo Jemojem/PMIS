@@ -62,9 +62,8 @@ fun DrawerMenu(onEvent: (DrawerEvents) -> Unit) {
 
 @Composable
 fun Header() {
-    val isDarkTheme = isSystemInDarkTheme() // Проверка, используется ли тёмная тема
+    val isDarkTheme = isSystemInDarkTheme()
 
-    // Выбор цвета для границы и фона карточки
     val borderColor = if (isDarkTheme) MyBlue else BgTranp1
     val textColor = if (isDarkTheme) Color.White else Color.Black
 
@@ -74,7 +73,7 @@ fun Header() {
             .height(170.dp)
             .padding(5.dp),
         shape = RoundedCornerShape(10.dp),
-        border = BorderStroke(1.dp, borderColor) // Применяем цвет границы
+        border = BorderStroke(1.dp, borderColor)
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -90,12 +89,12 @@ fun Header() {
                 text = "Величайшие игры доступные в Steam",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(borderColor) // Применяем цвет фона для текста
+                    .background(borderColor)
                     .padding(10.dp),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
-                color = textColor // Применяем цвет текста
+                color = textColor
             )
         }
     }

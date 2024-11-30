@@ -3,6 +3,7 @@ package com.example.a5_6lab.ui_components
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -15,7 +16,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainTopBar(title: String,drawerState: DrawerState) {
+fun MainTopBar(title: String,drawerState: DrawerState,onFavClick: () -> Unit) {
     val coroutine= rememberCoroutineScope()
     TopAppBar(
         title = {
@@ -34,10 +35,10 @@ fun MainTopBar(title: String,drawerState: DrawerState) {
         },
         actions = {
             IconButton(
-                onClick = { }
+                onClick = { onFavClick() }
             ) {
                 Icon(
-                    imageVector = Icons.Default.Favorite,
+                    imageVector = Icons.Default.Star,
                     contentDescription = "Favorite"
                 )
             }
